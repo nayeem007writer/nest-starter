@@ -3,20 +3,17 @@ import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, U
 
 
 @Entity()
-export class User extends BaseEntity{
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    name: string;
-
-    @Column(Unique)
+    @Column({ unique: true })
     email: string;
 
     @Column()
     hash: string;
 
-    @Column({default: null})
+    @Column({ nullable: true })
     hashRt?: string;
 
     @CreateDateColumn()
