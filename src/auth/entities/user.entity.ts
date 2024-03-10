@@ -1,5 +1,5 @@
 import { timestamp } from "rxjs";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 
 @Entity()
@@ -10,18 +10,18 @@ export class User extends BaseEntity{
     @Column()
     name: string;
 
-    @Column()
+    @Column(Unique)
     email: string;
 
     @Column()
     hash: string;
 
-    @Column()
-    hashRt: string;
+    @Column({default: null})
+    hashRt?: string;
 
-    @Column(timestamp)
+    @CreateDateColumn()
     createdAt: Date;
 
-    @Column(timestamp)
+    @CreateDateColumn()
     updatedAt: Date;
 }
