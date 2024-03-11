@@ -81,7 +81,32 @@ export class AuthService {
         return token;
      }
 
-    signOut() { }
+    async signOut(userId: number) {
+        const user = await this.userRepo.findOne({
+            where: {id:userId}
+        });
 
-    refreshToken() { }
+        if(!user) throw new ForbiddenException("invalid credential");
+
+        user.hashRt =null;
+        this.userRepo.save(user);
+     }
+
+    async refreshToken(userId: number, rt: string) {
+        const user = await this.userRepo.findOne({
+            where: {
+                id:userId,
+            }
+        })
+
+        if(!user) throw new ForbiddenException("invalid credential");
+
+        const rtIsOk = bcrypt.compare(rt, user.hashRt);
+        if(!rtIsOk) throw new ForbiddenException('invalid credential');
+
+        const token = await this.createAccessToken((await user).id, (await user).email);
+        await this.updateRefreshToken((await user).id, (await token).refresh_token);
+        return token;
+
+     }
 }
